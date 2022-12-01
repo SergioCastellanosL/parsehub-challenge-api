@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
 let root = {
     type: "dir",
@@ -54,6 +55,10 @@ const getChildren = (fileName, parentFile, parentName) => {
     }
     return 'not found'
 }
+
+app.use(cors({
+    origin: '*'
+}));
 
 app.use(express.json());
 app.get('/*', (req, res)=>{
