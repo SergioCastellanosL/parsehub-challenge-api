@@ -56,9 +56,7 @@ const getChildren = (fileName, parentFile, parentName) => {
     return 'not found'
 }
 
-app.use(cors({
-    origin: '*'
-}));
+app.use(cors());
 
 app.use(express.json());
 app.get('/*', (req, res)=>{
