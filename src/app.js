@@ -57,6 +57,12 @@ const getChildren = (fileName, parentFile, parentName) => {
 }
 
 //app.use(cors());
+var corsOptions = {
+    origin: "http://localhost:3000"
+  };
+  
+  app.use(cors(corsOptions));
+
 app.use((req, res, next) => {
     res.header({"Access-Control-Allow-Origin": "*"});
     next();
