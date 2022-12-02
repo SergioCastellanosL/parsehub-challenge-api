@@ -84,7 +84,8 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 app.get('/*', (req, res)=>{
-    let files = getChildren(req.body.route, root);
+    //let files = getChildren(req.params[0], root, 'root');
+    let files = getChildren(req.params[0].split('/'), root);
     res.send({response: files});
 });
 
