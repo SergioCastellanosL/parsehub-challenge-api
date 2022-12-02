@@ -30,6 +30,19 @@ let root = {
                                 }
                             },
                         },
+                        "myname": {
+                            type: "dir",
+                            children: {
+                                mysupersecretname: {
+                                    type: "dir",
+                                    children: {
+                                        mysupersecretnamefile: {
+                                           type: "file",
+                                        },
+                                    },
+                                }
+                            },
+                        },
                     }
                 },
             },
@@ -37,23 +50,24 @@ let root = {
     },
 };
 
-const getChildren = (fileName, parentFile, parentName) => {
-    if(fileName === parentName || fileName === ''){
-        if(parentFile.children !== undefined)
-            return Object.keys(parentFile.children)
-        return 'is a file'
-    }
-    if(parentFile.type === 'dir'){
-        let childrenName = Object.keys(parentFile.children)
-        for(let i=0; i<childrenName.length;i++){
-            let children = getChildren(fileName, parentFile.children[childrenName[i]], childrenName[i]);
-            if(children !== 'not found'){
-                return children
-            }
-        }
+const getChildren = (route, root) =>{
+    let parent = root;
+    let children = [];
+    if(route.length === 1 && route[0] === 'root'){
+        return Object.keys(root.children)
+    }else if(route[0] !== 'root'){
         return 'not found'
     }
-    return 'not found'
+        
+    for(let i=1; i<route.length;i++){
+        if(!parent.children[route[i]])
+            return 'not found'
+        if(parent.children[route[i]].type === 'file')
+            return 'is a file'
+        parent = parent.children[route[i]];
+    }
+    children = Object.keys(parent.children);
+    return children
 }
 
 //app.use(cors());
@@ -70,7 +84,7 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 app.get('/*', (req, res)=>{
-    let files = getChildren(req.params[0], root, 'root')
+    let files = getChildren(req.body.route, root);
     res.send({response: files});
 });
 
